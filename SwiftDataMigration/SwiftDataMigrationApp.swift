@@ -36,19 +36,32 @@ class ItemMigrationPlan: SchemaMigrationPlan {
     
     static var stages: [MigrationStage] = [migrateV1ToV2]
     
-    static var migrateV1ToV2 = MigrationStage.custom(fromVersion: ItemMigrationSchemaV1.self,
-                                                     toVersion: ItemMigrationSchemaV2.self,
-                                                     willMigrate: { context in
-        print("Will run migration")
-        let items = try! context.fetch(FetchDescriptor<ItemMigrationSchemaV1.Item>())
-        print("Will run migration on \(items.count) items")
-        for item in items {
-            context.insert(Item(previous: item))
-            context.delete(item)
-        }
-        try! context.save()
-        print("Did run migration")
-    }, didMigrate: nil)
+    static var migrateV1ToV2 = {
+        var attrs: [String] = []
+        return MigrationStage.custom(fromVersion: ItemMigrationSchemaV1.self,
+                                                         toVersion: ItemMigrationSchemaV2.self,
+                                                         willMigrate: { context in
+            print("Will run migration")
+            let items = try! context.fetch(FetchDescriptor<ItemMigrationSchemaV1.Item>())
+            print("Will run migration on \(items.count) items")
+            attrs = items.map({$0.attr1})
+            for item in items {
+                context.delete(item)
+            }
+            try! context.save()
+            print("Did run migration")
+        }, didMigrate: { context in
+            print("Will run post-migration")
+            for attr in attrs {
+                let item = ItemMigrationSchemaV2.Item(migratedAttr1: attr)
+                context.insert(item)
+                
+                print("Created a new item post-migration")
+            }
+            try! context.save()
+            print("Did run post-migration")
+        })
+    }()
 }
 
 class ItemMigrationSchemaV1: VersionedSchema {
@@ -79,8 +92,8 @@ class ItemMigrationSchemaV2: VersionedSchema {
             self.attr2 = "Created"
         }
         
-        init(previous: ItemMigrationSchemaV1.Item) {
-            self.attr1 = previous.attr1
+        init(migratedAttr1: String) {
+            self.attr1 = migratedAttr1
             self.attr2 = "Migrated"
         }
     }
