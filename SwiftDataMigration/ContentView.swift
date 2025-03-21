@@ -17,7 +17,7 @@ struct ContentView: View {
             List {
                 ForEach(items) { item in
                     NavigationLink {
-                        Text("Item at \(item.attr1)")
+                        Text("Item at \(item.attr1) \(item.attr2)")
                     } label: {
                         Text(item.attr1)
                     }
