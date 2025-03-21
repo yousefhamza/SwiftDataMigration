@@ -8,6 +8,8 @@
 import SwiftUI
 import SwiftData
 
+typealias Item = ItemMigrationSchemaV2.Item
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
