@@ -43,6 +43,7 @@ struct ContentView: View {
         withAnimation {
             let newItem = Item(attr1: "attr1")
             modelContext.insert(newItem)
+            try! modelContext.save()
         }
     }
 
