@@ -32,7 +32,7 @@ struct SwiftDataMigrationApp: App {
 }
 
 class ItemMigrationPlan: SchemaMigrationPlan {
-    static var schemas: [any VersionedSchema.Type] = []
+    static var schemas: [any VersionedSchema.Type] = [ItemMigrationSchemaV1.self]
     
     static var stages: [MigrationStage] = []
 }
