@@ -17,7 +17,7 @@ struct SwiftDataMigrationApp: App {
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: schema, migrationPlan: ItemMigrationPlan.self, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -29,4 +29,16 @@ struct SwiftDataMigrationApp: App {
         }
         .modelContainer(sharedModelContainer)
     }
+}
+
+class ItemMigrationPlan: SchemaMigrationPlan {
+    static var schemas: [any VersionedSchema.Type] = []
+    
+    static var stages: [MigrationStage] = []
+}
+
+class ItemMigrationSchemaV1: VersionedSchema {
+    static var models: [any PersistentModel.Type] = [Item.self]
+    
+    static var versionIdentifier: Schema.Version = Schema.Version(1, 0, 0)
 }
