@@ -8,8 +8,6 @@
 import SwiftUI
 import SwiftData
 
-typealias Item = ItemMigrationSchemaV2.Item
-
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
@@ -19,7 +17,7 @@ struct ContentView: View {
             List {
                 ForEach(items) { item in
                     NavigationLink {
-                        Text("Item at \(item.attr1) \(item.attr2)")
+                        Text("Item at \(item.attr1)")
                     } label: {
                         Text(item.attr1)
                     }

@@ -7,3 +7,11 @@
 
 import Foundation
 import SwiftData
+
+@Model final class Item: Equatable {
+    var attr1: String
+    
+    init(attr1: String) {
+        self.attr1 = attr1
+    }
+}
