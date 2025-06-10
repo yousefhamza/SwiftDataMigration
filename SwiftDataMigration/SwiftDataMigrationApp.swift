@@ -37,14 +37,14 @@ class ItemMigrationPlan: SchemaMigrationPlan {
     static var stages: [MigrationStage] = [migrateV1ToV2]
     
     static var migrateV1ToV2 = {
-        var attrs: [String] = []
+        var attrs: [ItemMigrationSchemaV1.Item] = []
         return MigrationStage.custom(fromVersion: ItemMigrationSchemaV1.self,
                                                          toVersion: ItemMigrationSchemaV2.self,
                                                          willMigrate: { context in
             print("Will run migration")
             let items = try! context.fetch(FetchDescriptor<ItemMigrationSchemaV1.Item>())
             print("Will run migration on \(items.count) items")
-            attrs = items.map({$0.attr1})
+            attrs = items.map({$0})
             for item in items {
                 context.delete(item)
             }
@@ -53,7 +53,7 @@ class ItemMigrationPlan: SchemaMigrationPlan {
         }, didMigrate: { context in
             print("Will run post-migration")
             for attr in attrs {
-                let item = ItemMigrationSchemaV2.Item(migratedAttr1: attr)
+                let item = ItemMigrationSchemaV2.Item(migratedAttr1: attr.attr1)
                 context.insert(item)
                 
                 print("Created a new item post-migration")
