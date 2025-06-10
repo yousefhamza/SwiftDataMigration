@@ -62,6 +62,17 @@ class ItemMigrationPlan: SchemaMigrationPlan {
             print("Did run post-migration")
         })
     }()
+    
+//    static var migrateV1ToV2 = MigrationStage.custom(fromVersion: ItemMigrationSchemaV1.self,
+//                                                     toVersion: ItemMigrationSchemaV2.self,
+//                                                     willMigrate: { context in
+//        let items = try context.fetch(FetchDescriptor<ItemMigrationSchemaV1.Item>())
+//        for item in items {
+//            context.insert(ItemMigrationSchemaV2.Item(migratedAttr1: item.attr1))
+//            context.delete(item)
+//        }
+//        try context.save()
+//    }, didMigrate: nil)
 }
 
 class ItemMigrationSchemaV1: VersionedSchema {
