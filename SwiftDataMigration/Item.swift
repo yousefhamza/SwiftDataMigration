@@ -7,3 +7,5 @@
 
 import Foundation
 import SwiftData
+
+typealias Item = ItemMigrationSchemaV2.Item

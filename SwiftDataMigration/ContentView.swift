@@ -8,8 +8,6 @@
 import SwiftUI
 import SwiftData
 
-typealias Item = ItemMigrationSchemaV2.Item
-
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
@@ -45,7 +43,11 @@ struct ContentView: View {
         withAnimation {
             let newItem = Item(attr1: "attr1")
             modelContext.insert(newItem)
-            try! modelContext.save()
+            do {
+                try modelContext.save()
+            } catch {
+                print("Error saving context: \(error)")
+            }
         }
     }
 
